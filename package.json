@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "apex-log-reader.read-log",
-        "title": "Read Log"
+        "title": "Apex Reader: Read Log"
       }
     ]
   },
