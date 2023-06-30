@@ -19,9 +19,20 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// vscode.window.showInformationMessage('Hello World from Apex Log Reader!');
 		
-		let log = vscode.window.createOutputChannel('Apex Log Reader');
-		log.show();
-		log.appendLine('This is a test');
+		let output = vscode.window.createOutputChannel('Apex Log Reader');
+		let path = '';
+		vscode.window.showOpenDialog().then(function(response) {
+			if (response) {
+				path = response[0].path;
+			} else {
+				console.error('Unable to Read File');
+			}
+
+			output.show();
+			output.appendLine('This is a test');
+			output.appendLine(path);
+		});
+
 	});
 
 	context.subscriptions.push(disposable);
