@@ -25,6 +25,11 @@ export function activate(context: vscode.ExtensionContext) {
 		function errorHandler() {
 			console.error('error');
 		}
+
+		function filterUserDebugStatement(statement: string) {
+			return statement.slice(46);
+		}
+
 		vscode.window.showOpenDialog().then(function(response) {
 			if (response) {
 				path = response[0].path;
@@ -33,30 +38,27 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 			let fileContents = fs.readFileSync(path).toString();
 			let statements = [];
-			let lineBreaks = 0;
 
-			//count line breaks
 			// fill statements
 			let temp = '';
 			for (let i = 0; i < fileContents.length; i++) {
 				if (fileContents[i] === '\n') {
-					lineBreaks++;
 					statements.push(temp);
 					temp = '';
 				} else if (i === fileContents.length -1) {
-					lineBreaks++;
 					temp += fileContents[i];
 					statements.push(temp);
 				} else {
 					temp += fileContents[i];
 				}
 			}
-			console.log(lineBreaks);
-			console.log(statements);
 
 			output.show();
 			for (let i = 0; i < statements.length; i++) {
-				output.appendLine(statements[i]);
+				
+				if (statements[i].includes('USER_DEBUG')) {
+					output.appendLine(filterUserDebugStatement(statements[i]));
+				}
 			}
 		});
 
