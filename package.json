@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "apex-log-reader.helloWorld",
-        "title": "Hello World"
+        "command": "apex-log-reader.read-log",
+        "title": "Read Log"
       }
     ]
   },
