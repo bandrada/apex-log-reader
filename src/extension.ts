@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -21,16 +22,42 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		let output = vscode.window.createOutputChannel('Apex Log Reader');
 		let path = '';
+		function errorHandler() {
+			console.error('error');
+		}
 		vscode.window.showOpenDialog().then(function(response) {
 			if (response) {
 				path = response[0].path;
 			} else {
 				console.error('Unable to Read File');
 			}
+			let fileContents = fs.readFileSync(path).toString();
+			let statements = [];
+			let lineBreaks = 0;
+
+			//count line breaks
+			// fill statements
+			let temp = '';
+			for (let i = 0; i < fileContents.length; i++) {
+				if (fileContents[i] === '\n') {
+					lineBreaks++;
+					statements.push(temp);
+					temp = '';
+				} else if (i === fileContents.length -1) {
+					lineBreaks++;
+					temp += fileContents[i];
+					statements.push(temp);
+				} else {
+					temp += fileContents[i];
+				}
+			}
+			console.log(lineBreaks);
+			console.log(statements);
 
 			output.show();
-			output.appendLine('This is a test');
-			output.appendLine(path);
+			for (let i = 0; i < statements.length; i++) {
+				output.appendLine(statements[i]);
+			}
 		});
 
 	});
